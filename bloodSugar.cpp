@@ -66,6 +66,8 @@ void BloodSugar::addToDay(double val) {
         overflowDay(val);
     }
 
+   // cout << "Exiting function addToDay()." << endl;       // seems happy
+
 }
 
 // Incorporate new value into stored week-data.
@@ -90,6 +92,8 @@ void BloodSugar::addToWeek(double val) {
     } else {
         overflowWeek(val);
     }
+
+    //cout << "Exiting function addToWeek()." << endl;      // seems happy
 }
 
 // Deal with overflows when adding to day.

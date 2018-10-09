@@ -34,6 +34,8 @@ int main() {
             cin.clear();
             cin >> command;
             if (val == 'n' || val == 'N') {
+                theBlood.nextDay();
+                curr = theBlood.getCurrentDay();
             } else if (val == 'd' || val == 'D') {
                 theBlood.printDay();
             } else if (val == 'w' || val == 'W') {
