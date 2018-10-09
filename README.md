@@ -55,4 +55,21 @@ We can read values in with cin, and clever manipulation of this will allow us to
 
 So the main question remaining is: How do we store the actual values for each day? Do we even need to? 
 Perhaps we can just lump them from the input stream into our arrays without worrying about storing specific readings.
-I think double will provide plenty of space so that we don't have to worry about overflow.
+
+Will have to deal with overflow, especially in the per-day and per-week overflow. I'll have to figure out how to deal with that!
+
+Hints! "Big number" helper class
+- Trick: string-based number (ugly, but works)
+- Better: Store many smaller numbers together, and then just tell the user "sum of all these"
+- Or detect when hits MAX_FLT (or whatever) and give as p \* MAX_FLT + remainder
+
+Here, I believe I'll stick with *arrays* as the primary data structure.
+
+
+### Pseudocode (or pseudopseudocode)
+
+
+class myStuff{
+public:
+
+};
