@@ -35,4 +35,24 @@ Written with only arrays, linked lists.
 DUE: October 26.
 
 ### PLANNING.
+Clearly, we are going to need ARRAYS:
+- double daycount[14]
+- double daymax[14]
+- double daymin[14]
+- double daysum[14]
 
+- double weekcount[2]
+- double weekmax[2]
+- double weekmin[2]
+- double weeksum[2]
+- double maxchange[4]
+
+
+We can read values in with cin, and clever manipulation of this will allow us to read in both numerical and character values! (Source for this: Chase Austin)
+- Look for floats first, but ignore negative numbers
+- Look for the specific character (sequences) that are supposed to interact, ignore otherwise
+
+
+So the main question remaining is: How do we store the actual values for each day? Do we even need to? 
+Perhaps we can just lump them from the input stream into our arrays without worrying about storing specific readings.
+I think double will provide plenty of space so that we don't have to worry about overflow.
