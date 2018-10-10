@@ -18,7 +18,7 @@ int main() {
     cout << "(Of course, you will have to obtain these yourself via a Proprietary Medical Device (tm)." << endl;
     cout << "Some useful summary information about your blood sugar will also be stored." << endl << endl;
 
-    cout << "Type 'help' or 'h' to see a list of commands. 'exit' or 'e' will exit the program." << endl << endl;
+    cout << "Type 'h' or 'H' to see a list of commands. 'e' or 'E' will exit the program." << endl << endl;
 
     // We can use cin to read into either of these, as we like.
     double val;
@@ -33,18 +33,17 @@ int main() {
         } else {
             cin.clear();
             cin >> command;
-            if (val == 'n' || val == 'N') {
+            if (command == 'n' || command == 'N') {
                 theBlood.nextDay();
                 curr = theBlood.getCurrentDay();
-            } else if (val == 'd' || val == 'D') {
+            } else if (command == 'd' || command == 'D') {
                 theBlood.printDay();
-            } else if (val == 'w' || val == 'W') {
+            } else if (command == 'w' || command == 'W') {
                 theBlood.printWeek();
-            } else if (val == 'h' || val == 'H') {
-                // theBlood.showCommands();
-            } else if (val == 'e' || val == 'E') {
-                cout << "Exiting." << endl;
-                return 0;
+            } else if (command == 'h' || command == 'H') {
+                theBlood.showCommands();
+            } else if (command == 'e' || command == 'E') {
+                theBlood.endProgram();
             } else {
                 cin.clear();
                 cin.ignore();
@@ -52,5 +51,10 @@ int main() {
         }
     }
 
+    cout << endl << "Finished entering data. Displaying final summaries:" << endl;
+    theBlood.printDay();
+    theBlood.printWeek();
+
+    cout << "See you around!" << endl << endl;
     return 0;
 }

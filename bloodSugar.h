@@ -31,6 +31,7 @@ class BloodSugar {
         ~BloodSugar();
 
         int getCurrentDay(void);
+        int getCurrentWeek(void);
 
         void addToDay(double val);
         void addToWeek(double val);
@@ -39,15 +40,9 @@ class BloodSugar {
         void printDay(void);
         void printWeek(void);
         void nextDay(void);
-        void nextWeek(void);
 
-        /*
         void showCommands(void);
-        */
-        /*
         void endProgram(void);
-        */
-
 
     private:
         numHolder daySum[14];

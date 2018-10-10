@@ -8,12 +8,12 @@
 #include "bloodSugar.h"
 
 BloodSugar::BloodSugar() {
-// Initializes pretty much everything to zero.
+// Initializes pretty much everything to zero, except the mins
     for (int i = 0; i < 14; i++) {
         daySum[i].timesOver = 0;
         daySum[i].remainder = 0;
 
-        dayMin[i] = 0;
+        dayMin[i] = DBL_MAX;
         dayMax[i] = 0;
         dayCount[i] = 0;
     }
@@ -22,7 +22,7 @@ BloodSugar::BloodSugar() {
         weekSum[i].timesOver = 0;
         weekSum[i].remainder = 0;
         
-        weekMin[i] = 0;
+        weekMin[i] = DBL_MAX;
         weekMax[i] = 0;
         weekCount[i] = 0;
 
@@ -38,13 +38,18 @@ BloodSugar::BloodSugar() {
 BloodSugar::~BloodSugar() {
 }
 
-// Get the current day
+// Get the current day and week
 int BloodSugar::getCurrentDay(void) {
     return currentDay;
 }
 
+int BloodSugar::getCurrentWeek(void) {
+    return currentWeek;
+}
+
 // Add value to the daily information
 void BloodSugar::addToDay(double val) {
+    // Ignore nonpositive values
     if (val <= 0) return;
     
     // Change the count
@@ -65,13 +70,11 @@ void BloodSugar::addToDay(double val) {
     } else {
         overflowDay(val);
     }
-
-   // cout << "Exiting function addToDay()." << endl;       // seems happy
-
 }
 
 // Incorporate new value into stored week-data.
 void BloodSugar::addToWeek(double val) {
+    // Ignore nonpositive values
     if (val <= 0) return;
     
     // Change the count
@@ -79,7 +82,7 @@ void BloodSugar::addToWeek(double val) {
 
     // Change the min and max
     if (val < weekMin[currentWeek]) {
-        dayMin[currentWeek] = val;
+        weekMin[currentWeek] = val;
     }
 
     if (val > weekMax[currentWeek]) {
@@ -87,31 +90,38 @@ void BloodSugar::addToWeek(double val) {
     }
 
     // Change the sum
-    if (val + daySum[currentWeek].remainder < DBL_MAX) {
+    if (val + weekSum[currentWeek].remainder < DBL_MAX) {
         weekSum[currentWeek].remainder += val;
     } else {
         overflowWeek(val);
     }
-
-    //cout << "Exiting function addToWeek()." << endl;      // seems happy
 }
 
-// Deal with overflows when adding to day.
+// Deal with overflows when adding to day. We know sum + val > DBL_MAX; in particular,
+// sum + val = DBL_MAX + remainder. So we may define
+// val = DBL_MAX - leftRem; sum = DBL_MAX - rightRem, which gives
+// (DBL_MAX - leftRem) + (DBL_MAX - rightRem) = DBL_MAX + rem =>
+// 2 DBL_MAX - leftRem - rightRem = DBL_MAX + rem =>
+// rem = abs(DBL_MAX - leftRem - rightRem) (to ensure positivity is retained)
 void BloodSugar::overflowDay(double val) {
-    double therem = abs(daySum[currentDay].remainder - val);
+    double leftRem = DBL_MAX - daySum[currentDay].remainder;
+    double rightRem = DBL_MAX - val;
+    double therem = abs(DBL_MAX - leftRem - rightRem);
     daySum[currentDay].remainder = therem;
     daySum[currentDay].timesOver++;
 }
 
 // Deal with overflows when adding to week.
 void BloodSugar::overflowWeek(double val) {
-    double therem = abs(weekSum[currentWeek].remainder - val);
+    double leftRem = DBL_MAX - weekSum[currentWeek].remainder;
+    double rightRem = DBL_MAX - val;
+    double therem = abs(DBL_MAX - leftRem - rightRem);
     weekSum[currentWeek].remainder = therem;
     weekSum[currentWeek].timesOver++;
 }
 
 void BloodSugar::printDay(void) {
-    cout << endl << "The current day is day #" << currentDay + 1 << " (of week #" << currentWeek + 1 << ")." << endl;
+    cout << endl << "The current day is day #" << currentDay + 1 << " (day # " << (currentDay % 7) + 1 << " of week #" << currentWeek + 1 << ")." << endl;
     cout << "You read your blood sugar " << dayCount[currentDay] << " times today." << endl;
     cout << "Your minimum blood sugar reading today: " << dayMin[currentDay] << "." << endl;
     cout << "Your maximum blood sugar reading today: " << dayMax[currentDay] << "." << endl;
@@ -122,44 +132,38 @@ void BloodSugar::printDay(void) {
 void BloodSugar::printWeek(void) {
     cout << endl << "The current week: week #" << currentWeek + 1 << "." << endl;
     cout << "You have read your blood sugar " << weekCount[currentWeek] << " times so far this week." << endl;
-    cout << "Your weekly minimum blood sugar reading: " << weekMin[currentDay] << "." << endl;
-    cout << "Your weekly maximum blood sugar reading today: " << weekMax[currentDay] << "." << endl;
+    cout << "Your weekly minimum blood sugar reading: " << weekMin[currentWeek] << "." << endl;
+    cout << "Your weekly maximum blood sugar reading: " << weekMax[currentWeek] << "." << endl;
     cout << "Your weekly sum of blood sugars: " << weekSum[currentWeek].timesOver << "*" << DBL_MAX << " + " << weekSum[currentWeek].remainder << "." << endl;
     cout << "You're doing great!" << endl << endl;
 }
 
 void BloodSugar::nextDay(void) {
     currentDay++;
+    if (currentDay > 6 && currentWeek ==0) { currentWeek++; }
 }
 
-void BloodSugar::nextWeek(void) {
-    currentWeek++;
-}
-
-/*
-void showCommands(void) {
+void BloodSugar::showCommands(void) {
     cout << endl;
     cout << "Enter a positive number (decimals are fine) to have it added to your blood sugar data." << endl;
-    cout << "Type 'n' or 'next' to begin entering readings for the next day." << endl;
-    cout << "Type 'd' or 'day' to see a current daily summary." << endl;
-    cout << "Similarly, type 'w' or 'week' to see a weekly summary." << endl;
-    cout << "Type 'h' or 'help' to see these commands again." << endl;
-    cout << "Finally, type 'e' or 'exit' to exit the program." << endl;
+    cout << "Type 'n' or 'N' to begin entering readings for the next day." << endl;
+    cout << "Type 'd' or 'D' to see a current daily summary." << endl;
+    cout << "Similarly, type 'w' or 'W' to see a weekly summary." << endl;
+    cout << "Type 'h' or 'H' to see these commands again." << endl;
+    cout << "Finally, type 'e' or 'E' to exit the program." << endl;
 
 }
-*/
 
-/*
-void endProgram(void) {
-    cout << endl << "Are you sure you want to exit?" << endl;
-    cout << "Type 'y', 'Y', or 'yes' if so; anything else otherwise." << endl;
-    string input;
+void BloodSugar::endProgram(void) {
+    cout << endl << "Would you like to see final summaries?" << endl;
+    cout << "Type 'y' or 'Y' if so; anything else otherwise." << endl;
+    char input;
     cin >> input;
-    if (input == "y" || input == "Y" || input == "yes" || input == "Yes" || input == "YES") {
-        cout << "Program exits. Goodbye!" << endl;
+    if (input == 'y' || input == 'Y') {
+        printDay();
+        printWeek();
         exit(0);
     } else {
-        return;
+        exit(0);
     }
 }
-*/
