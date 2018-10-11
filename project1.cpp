@@ -13,7 +13,7 @@ int main() {
     BloodSugar theBlood;
 
     // Introductory remarks
-    cout << "Welcome to the blood-sugar tracker!" << endl;
+    cout << endl << "Welcome to the blood-sugar tracker!" << endl;
     cout << "For the next two weeks, this program will track your blood sugar readings." << endl;
     cout << "(Of course, you will have to obtain these yourself via a Proprietary Medical Device (tm)." << endl;
     cout << "Some useful summary information about your blood sugar will also be stored." << endl << endl;
@@ -51,8 +51,7 @@ int main() {
         }
     }
 
-    cout << endl << "Finished entering data. Displaying final summaries:" << endl;
-    theBlood.printDay();
+    cout << endl << "Finished entering data. Last week's results:" << endl;
     theBlood.printWeek();
 
     cout << "See you around!" << endl << endl;

@@ -9,16 +9,16 @@
 #include <iostream>
 #include <cfloat>       // for overflow purposes
 #include <cmath>        // for absolute value
-#include <string>       // for user input
 #include <stdlib.h>     // for exit()
 using std::cin;
 using std::cout;
 using std::endl;
 using std::abs;
-using std::string;
 
 
 // Values with possible overflow
+// The idea for this came from StackOverflow:
+// https://stackoverflow.com/questions/3607352
 struct numHolder {
     unsigned long int timesOver;
     double remainder;
@@ -37,6 +37,8 @@ class BloodSugar {
         void addToWeek(double val);
         void overflowDay(double val);
         void overflowWeek(double val);
+
+
         void printDay(void);
         void printWeek(void);
         void nextDay(void);

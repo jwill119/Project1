@@ -173,15 +173,12 @@ void BloodSugar::showCommands(void) {
 void BloodSugar::endProgram(void) {
     cout << endl << "Would you like to see final summaries?" << endl;
     cout << "Type 'y' or 'Y' if so; anything else otherwise." << endl;
-    cout << "Or type 'r' or 'R' if you wish to return to the main program." << endl << endl;
     char input;
     cin >> input;
     if (input == 'y' || input == 'Y') {
         printDay();
         printWeek();
         exit(0);
-    } else if (input == 'r' || input == 'R') {
-        return;
     } else {
         exit(0);
     }
