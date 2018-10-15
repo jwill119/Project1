@@ -96,14 +96,6 @@ void BloodSugar::addToWeek(double val) {
         overflowWeek(val);
     }
 
-    // Increment the delta
-    if (currentDay > 0) {
-        double theDelta = abs(dayCount[currentDay] - dayCount[currentDay - 1]);
-        if (theDelta > biggestDelta[currentWeek][1]) {
-            biggestDelta[currentWeek][1] = theDelta;
-            biggestDelta[currentWeek][0] = (currentDay % 7) + 1;
-        }
-    }
 }
 
 // Deal with overflows when adding to day. We know sum + val > DBL_MAX; in particular,
@@ -139,8 +131,18 @@ void BloodSugar::printDay(void) {
     cout << "Keep on keeping on!" << endl << endl;
 }
 
-// Print weekly summary all nice
+// Print weekly summary all nice, also update the weekly biggestDelta
 void BloodSugar::printWeek(void) {
+    // Increment the delta
+    if (currentDay > 0) {
+        double theDelta = (dayCount[currentDay] >= dayCount[currentDay - 1]) ?
+            dayCount[currentDay] - dayCount[currentDay - 1] : dayCount[currentDay - 1] - dayCount[currentDay];
+        if (theDelta > biggestDelta[currentWeek][1]) {
+            biggestDelta[currentWeek][1] = theDelta;
+            biggestDelta[currentWeek][0] = (currentDay % 7) + 1;
+        }
+    }
+
     cout << endl << "The current week: week #" << currentWeek + 1 << "." << endl;
     cout << "You have read your blood sugar " << weekCount[currentWeek] << " times so far this week." << endl;
     cout << "Your weekly minimum blood sugar reading: " << weekMin[currentWeek] << "." << endl;
@@ -153,6 +155,7 @@ void BloodSugar::printWeek(void) {
 
 // Increment day (and week, if called for)
 void BloodSugar::nextDay(void) {
+    // Increment the day
     if (currentDay < 13) {
         currentDay++;
         if (currentDay > 6 && currentWeek ==0) { currentWeek++; }
