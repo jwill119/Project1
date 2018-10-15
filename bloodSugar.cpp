@@ -153,8 +153,16 @@ void BloodSugar::printWeek(void) {
 
 // Increment day (and week, if called for)
 void BloodSugar::nextDay(void) {
-    currentDay++;
-    if (currentDay > 6 && currentWeek ==0) { currentWeek++; }
+    if (currentDay < 13) {
+        currentDay++;
+        if (currentDay > 6 && currentWeek ==0) { currentWeek++; }
+    } else {
+        cout << endl << "Finished entering data. Last week's results:" << endl;
+        printWeek();
+        cout << "See you around!" << endl << endl;
+        currentDay++;
+        exit(0);
+    }
 }
 
 // Help function

@@ -51,9 +51,5 @@ int main() {
         }
     }
 
-    cout << endl << "Finished entering data. Last week's results:" << endl;
-    theBlood.printWeek();
-
-    cout << "See you around!" << endl << endl;
     return 0;
 }
