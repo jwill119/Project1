@@ -71,5 +71,18 @@ Here, I believe I'll stick with *arrays* as the primary data structure.
 
 class myStuff{
 public:
-
+  // Ended up doing this more or less iteratively in the actual code.
 };
+
+
+### FINAL NOTES
+
+There are a couple of test files, they should be clearly marked. They were just used to test how to deal with overflows and are not part of the actual project!
+
+The code files I compiled:
+
+- bloodSugar.h
+- bloodSugar.cpp
+- project1.cpp
+
+The executable output file is called Project1.
